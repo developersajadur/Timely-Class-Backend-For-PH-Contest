@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // For Prisma <5.10 uncomment this:
+  // directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role @default(user)
+  isDeleted Boolean  @default(false)
+  isBlocked Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  schedules Schedule[]
+
+  @@map("users")
+}
+
+model Schedule {
+  id          String   @id @default(cuid())
+  title       String?
+  subject     String
+  instructor  String
+  day         String // e.g., "Monday"
+  startTime   String // e.g., "09:00"
+  endTime     String // e.g., "10:30"
+  color       String? // hex code for color coding
+  description String?
+  priority    Int      @default(0)
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String
+  archives Archive[]
+
+  @@map("schedules")
+}
+
+model Archive {
+  id         String   @id @default(cuid())
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("archives")
+}
+
+ enum Role {
+  user
+  admin
+}
