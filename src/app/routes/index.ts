@@ -1,22 +1,17 @@
 import { Router } from 'express';
-import { customerRoute } from '../modules/Customer/customer.route';
-import { bikeRoute } from '../modules/Bike/bike.route';
-import { serviceRecordRoute } from '../modules/ServiceRecord/serviceRecord.route';
+import { UserRoutes } from '../modules/User/user.route';
+import { AuthRoutes } from '../modules/Auth/auth.route';
 
 const router = Router();
 
 const moduleRoutes = [
   {
-    path: '/',
-    route: customerRoute,
+    path: '/users',
+    route: UserRoutes,
   },
   {
-    path: '/',
-    route: bikeRoute,
-  },
-  {
-    path: '/',
-    route: serviceRecordRoute,
+    path: '/auth',
+    route: AuthRoutes,
   },
 ];
 

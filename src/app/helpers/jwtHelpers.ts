@@ -1,5 +1,5 @@
 import status from 'http-status';
-import jwt, { Secret, SignOptions } from 'jsonwebtoken'; 
+import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import AppError from './AppError';
 import { Role } from '@prisma/client';
 
@@ -57,7 +57,7 @@ const verifyToken = (token: string, secret: Secret): CustomPayload => {
     } else if (err.name === 'TokenExpiredError') {
       throw new AppError(status.FORBIDDEN, 'Token expired');
     }
-  
+
     throw new AppError(status.FORBIDDEN, 'Forbidden');
   }
 };
