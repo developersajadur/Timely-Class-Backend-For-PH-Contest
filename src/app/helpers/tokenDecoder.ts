@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import status from 'http-status';
@@ -17,7 +16,7 @@ export type TJwtPayload = {
 };
 
 export const tokenDecoder = (req: Request) => {
-  const token = req.cookies?.refreshToken;
+  const token = req.cookies?.token;
   if (!token) {
     throw new AppError(status.UNAUTHORIZED, 'You Are Not Authorized');
   }
