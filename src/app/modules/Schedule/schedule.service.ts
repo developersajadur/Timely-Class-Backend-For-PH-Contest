@@ -5,11 +5,7 @@ import { Schedule } from '@prisma/client';
 import prisma from '../../shared/prisma';
 import { PrismaQueryBuilder } from '../../builders/PrismaQueryBuilder';
 import { IUpdatePriorityInput } from './schedule.interface';
-
-const toMinutes = (time: string): number => {
-  const [hours, minutes] = time.split(':').map(Number);
-  return hours * 60 + minutes;
-};
+import { toMinutes } from './schedule.utils';
 
 const createSchedule = async (payload: Schedule, userId: string) => {
   const { day, startTime, endTime, subject, instructor } = payload;

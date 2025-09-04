@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const timeRegex = /^(0?[1-9]|1[0-2]):([0-5][0-9]) (AM|PM)$/;
+
 const createScheduleSchema = z.object({
   body: z.object({
     title: z.string().optional(),
@@ -8,10 +10,10 @@ const createScheduleSchema = z.object({
     day: z.string().min(1, 'Day is required'), // e.g., Monday
     startTime: z
       .string()
-      .regex(/^([0-1]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format, use HH:mm'),
+      .regex(timeRegex, 'Invalid time format, use HH:mm AM/PM'),
     endTime: z
       .string()
-      .regex(/^([0-1]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format, use HH:mm'),
+      .regex(timeRegex, 'Invalid time format, use HH:mm AM/PM'),
     date: z.string().optional(),
     color: z
       .string()
@@ -29,11 +31,11 @@ const updateScheduleSchema = z.object({
     day: z.string().min(1, 'Day is required').optional(), // e.g., Monday
     startTime: z
       .string()
-      .regex(/^([0-1]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format, use HH:mm')
+      .regex(timeRegex, 'Invalid time format, use HH:mm AM/PM')
       .optional(),
     endTime: z
       .string()
-      .regex(/^([0-1]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format, use HH:mm')
+      .regex(timeRegex, 'Invalid time format, use HH:mm AM/PM')
       .optional(),
     date: z.string().optional().optional(),
     color: z

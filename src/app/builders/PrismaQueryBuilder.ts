@@ -10,6 +10,7 @@ interface QueryOptions<T> {
   search?: string;
   sortField?: string;
   sortOrder?: 'asc' | 'desc';
+  include?: any;
   // page?: number;
   // limit?: number;
 }
@@ -21,6 +22,7 @@ export async function PrismaQueryBuilder<T>({
   search = '',
   sortField = 'createdAt',
   sortOrder = 'desc',
+  include = undefined,
   // page = 1,
   // limit = 10,
 }: QueryOptions<T>) {
@@ -42,6 +44,7 @@ export async function PrismaQueryBuilder<T>({
   const data = await model.findMany({
     where: combinedWhere,
     orderBy: { [sortField]: sortOrder },
+    include,
     // skip,
     // take: limit,
   });

@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { UserRoutes } from '../modules/User/user.route';
 import { AuthRoutes } from '../modules/Auth/auth.route';
 import { ScheduleRoutes } from '../modules/Schedule/schedule.route';
+import { ArchiveRoutes } from '../modules/Archive/archive.route';
+import { ReminderRoutes } from '../modules/Reminder/reminder.route';
 
 const router = Router();
 
@@ -17,6 +19,14 @@ const moduleRoutes = [
   {
     path: '/schedules',
     route: ScheduleRoutes,
+  },
+  {
+    path: '/archives',
+    route: ArchiveRoutes,
+  },
+  {
+    path: '/reminders',
+    route: ReminderRoutes,
   },
 ];
 
