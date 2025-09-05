@@ -4,6 +4,7 @@ import { AuthRoutes } from '../modules/Auth/auth.route';
 import { ScheduleRoutes } from '../modules/Schedule/schedule.route';
 import { ArchiveRoutes } from '../modules/Archive/archive.route';
 import { ReminderRoutes } from '../modules/Reminder/reminder.route';
+import { EmailOtpRoutes } from '../modules/EmailOtp/emailOtp.route';
 
 const router = Router();
 
@@ -27,6 +28,10 @@ const moduleRoutes = [
   {
     path: '/reminders',
     route: ReminderRoutes,
+  },
+  {
+    path: '/emails-otp',
+    route: EmailOtpRoutes,
   },
 ];
 

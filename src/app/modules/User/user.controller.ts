@@ -2,6 +2,7 @@ import status from 'http-status';
 import catchAsync from '../../helpers/catchAsync';
 import sendResponse from '../../helpers/sendResponse';
 import { UserService } from './user.service';
+import { tokenDecoder } from '../../helpers/tokenDecoder';
 
 const createUserIntoDb = catchAsync(async (req, res) => {
   const result = await UserService.createUserIntoDb(req.body);
@@ -13,6 +14,21 @@ const createUserIntoDb = catchAsync(async (req, res) => {
   });
 });
 
+const updateUserInDb = catchAsync(async (req, res) => {
+  const decoded = tokenDecoder(req);
+  const payload = req.body;
+
+  const result = await UserService.updateUserInDb(decoded.id, payload);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'User updated successfully',
+    data: result,
+  });
+});
+
 export const UserController = {
   createUserIntoDb,
+  updateUserInDb,
 };

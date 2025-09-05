@@ -50,6 +50,8 @@ const auth = (...roles: string[]) => {
 
       if (isUserExist.isDeleted) {
         throw new AppError(httpStatus.FORBIDDEN, 'You are deleted!');
+      } else if (!isUserExist.emailVerified) {
+        throw new AppError(httpStatus.NOT_ACCEPTABLE, 'You are not verified!');
       }
 
       req.user = verifiedUser;

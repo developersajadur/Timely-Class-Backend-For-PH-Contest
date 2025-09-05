@@ -1,17 +1,17 @@
+import { reminderEmailTemplate } from '../../templates/reminderEmailTemplate';
 import prisma from '../shared/prisma';
 import { sendEmail } from '../utils/email';
 
 export const scheduleReminderJob = async () => {
-  // console.log(`[${new Date().toISOString()}] Running scheduleReminderJob...`);
   const now = new Date();
-  const today = now.toLocaleDateString('en-US', { weekday: 'long' });
+  const todayStr = now.toDateString();
+  const weekday = now.toLocaleDateString('en-US', { weekday: 'long' });
 
   const schedules = await prisma.schedule.findMany({
     where: {
       reminderMinutes: { not: null },
       isDeleted: false,
-      reminderSent: false,
-      OR: [{ date: null, day: today }, { date: { not: null } }],
+      OR: [{ date: null, day: weekday }, { date: { not: null } }],
     },
     include: {
       user: {
@@ -28,31 +28,45 @@ export const scheduleReminderJob = async () => {
         `${schedule.date.toDateString()} ${schedule.startTime}`,
       );
     } else {
-      const currentDate = now.toDateString();
-      scheduleDateTime = new Date(`${currentDate} ${schedule.startTime}`);
+      scheduleDateTime = new Date(`${todayStr} ${schedule.startTime}`);
     }
 
     const triggerTime = new Date(
       scheduleDateTime.getTime() - schedule.reminderMinutes! * 60 * 1000,
     );
 
+    // Skip if reminder already sent today for recurring schedule
+    if (
+      !schedule.date &&
+      schedule.lastReminderSent?.toDateString() === todayStr
+    )
+      continue;
+
     if (now >= triggerTime && now < scheduleDateTime) {
+      const sendForEmail = {
+        userName: schedule.user.name,
+        subject: schedule.subject,
+        instructor: schedule.instructor,
+        startTime: schedule.startTime,
+        day: schedule?.day,
+      };
       await sendEmail({
         to: schedule.user.email,
         subject: `Reminder For: ${schedule.subject} Class`,
-        html: `
-          <p>Hi, <strong>${schedule.user.name}</strong></p>
-          <p>Your class <strong>${schedule.subject}</strong> with <strong>${schedule.instructor}</strong> starts at <strong>${schedule.startTime}</strong> on <strong>${schedule.day}</strong>.</p>
-          <p>Don't be late!</p>
-        `,
+        html: reminderEmailTemplate(sendForEmail),
       });
 
       await prisma.schedule.update({
-        where: { id: schedule.id, isDeleted: false, reminderSent: false },
-        data: { reminderSent: true },
+        where: { id: schedule.id },
+        data: {
+          reminderSent: !!schedule.date,
+          lastReminderSent: now,
+        },
       });
 
-      // console.log(`[${new Date().toISOString()}] Reminder sent for scheduleId: ${schedule.id}`);
+      console.log(
+        `[${new Date().toISOString()}] Reminder sent for scheduleId: ${schedule.id}`,
+      );
     }
   }
 };

@@ -18,7 +18,7 @@ const addOrUpdateReminder = async (
 
     const result = await tx.schedule.update({
       where: { id: scheduleId },
-      data: { reminderMinutes },
+      data: { reminderMinutes, reminderSent: false, lastReminderSent: null },
     });
 
     return result;

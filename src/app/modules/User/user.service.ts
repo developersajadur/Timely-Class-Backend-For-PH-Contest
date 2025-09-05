@@ -3,6 +3,7 @@ import prisma from '../../shared/prisma';
 import AppError from '../../helpers/AppError';
 import status from 'http-status';
 import { hashPassword } from '../../helpers/password';
+import withoutPassword from './user.utils';
 
 const createUserIntoDb = async (payload: User) => {
   const isExistUser = await prisma.user.findFirst({
@@ -22,9 +23,18 @@ const createUserIntoDb = async (payload: User) => {
     },
   });
 
-  return result;
+  return withoutPassword(result);
+};
+
+const updateUserInDb = async (userId: string, payload: Partial<User>) => {
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: payload,
+  });
+  return withoutPassword(updatedUser);
 };
 
 export const UserService = {
   createUserIntoDb,
+  updateUserInDb,
 };
