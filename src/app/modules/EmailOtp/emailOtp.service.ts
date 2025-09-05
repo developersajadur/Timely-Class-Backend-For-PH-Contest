@@ -31,7 +31,9 @@ const verifyEmailOtp = async (email: string, otp: string) => {
     });
 
     if (!record) {
-      throw new AppError(status.NOT_FOUND, 'OTP not found or already verified');
+      throw new AppError(status.NOT_FOUND, 'OTP not found');
+    } else if (record.verified) {
+      throw new AppError(status.NOT_FOUND, ' already verified');
     }
 
     if (record.expiresAt < new Date()) {

@@ -4,14 +4,15 @@ import AppError from '../../helpers/AppError';
 import status from 'http-status';
 import { sendEmail } from '../../utils/email';
 import { otpEmailTemplate } from '../../../templates/otpEmailTemplate';
+import config from '../../config';
 
 export const generateOtp = (): string => {
   return Math.floor(1000 + Math.random() * 9000).toString();
 };
 
 export const hashOtp = async (otp: string): Promise<string> => {
-  const salt = await bcrypt.genSalt(10);
-  return await bcrypt.hash(otp, salt);
+  const SALT_ROUNDS = Number(config.password_salt_rounds);
+  return await bcrypt.hash(otp, SALT_ROUNDS);
 };
 
 export const compareOtp = async (
