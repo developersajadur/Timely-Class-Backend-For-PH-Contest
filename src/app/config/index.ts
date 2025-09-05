@@ -17,8 +17,4 @@ export default {
     email_pass: process.env.EMAIL_PASS,
     email_from: process.env.EMAIL_FROM,
   },
-  qstash: {
-    qstash_url: process.env.QSTASH_URL,
-    qstash_token: process.env.QSTASH_TOKEN,
-  },
 };

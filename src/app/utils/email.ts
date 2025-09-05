@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import config from '../app/config';
+import config from '../config';
 
 export const sendEmail = async ({
   to,

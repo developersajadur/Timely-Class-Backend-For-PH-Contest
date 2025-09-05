@@ -5,7 +5,6 @@ import { Role } from '@prisma/client';
 
 const router = Router();
 
-router.post('/send-reminder', ReminderController.sendScheduleReminder);
 router.post(
   '/add-or-update-reminder',
   auth(Role.user),
